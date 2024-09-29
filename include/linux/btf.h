@@ -671,4 +671,8 @@ static inline bool btf_type_is_struct_ptr(struct btf *btf, const struct btf_type
 	return btf_type_is_struct(t);
 }
 
+
+void get_btf_range(void **start, void **end);
+
+
 #endif
