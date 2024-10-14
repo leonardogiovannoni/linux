@@ -1,18 +1,33 @@
 use crate::bindings;
+use core::ptr::addr_of_mut;
 
-/// # Safety
-/// currently deeply unsafe
-pub unsafe fn set_bpf_hello_world_func(ptr: *mut core::ffi::c_void) {
+// pub unsafe fn set_bpf_hello_world_func(ptr: *mut core::ffi::c_void) {
+//     unsafe {
+//         bindings::set_bpf_hello_world_func(ptr);
+//     }
+// }
+
+/*void *get_bpf_program_id_fn __rcu = NULL;
+void *insert_bpf_type_fn __rcu = NULL;
+void *get_list_of_types_to_be_checked_fn __rcu = NULL;
+ */
+
+ // assign_function_ptr(&get_bpf_program_id_fn, get_bpf_program_id);
+pub unsafe fn assign_get_bpf_program_id_fn(ptr: *mut core::ffi::c_void) {
     unsafe {
-        bindings::set_bpf_hello_world_func(ptr);
+        bindings::assign_function_ptr(addr_of_mut!(bindings::get_bpf_program_id_fn), ptr);
     }
 }
 
-/// # Safety
-/// currently deeply unsafe
-pub unsafe fn reset_bpf_hello_world_func() {
+pub unsafe fn assign_insert_bpf_type_fn(ptr: *mut core::ffi::c_void) {
     unsafe {
-        bindings::reset_bpf_hello_world_func();
+        bindings::assign_function_ptr(addr_of_mut!(bindings::insert_bpf_type_fn), ptr);
+    }
+}
+
+pub unsafe fn assign_get_list_of_types_to_be_checked_fn(ptr: *mut core::ffi::c_void) {
+    unsafe {
+        bindings::assign_function_ptr(addr_of_mut!(bindings::get_list_of_types_to_be_checked_fn), ptr);
     }
 }
 

@@ -9262,34 +9262,3 @@ bool btf_param_match_suffix(const struct btf *btf,
 	param_name += len - suffix_len;
 	return !strncmp(param_name, suffix, suffix_len);
 }
-
-
-void *bpf_hello_world_func __rcu = NULL;
-
-void set_bpf_hello_world_func(void *func) {
-	rcu_assign_pointer(bpf_hello_world_func, func);
-	synchronize_rcu();
-}
-
-BPF_CALL_1(bpf_hello_world, const char *, s) 
-{
-	void *ptr;
-
-    rcu_read_lock();
-	int ret = -1;
-    ptr = rcu_dereference(bpf_hello_world_func);
-    if (ptr) {
-		int (*fun)(const char *) = ptr;
-        ret = fun(s);
-    }
-    rcu_read_unlock();
-	return ret;
-	
-}
-
-const struct bpf_func_proto bpf_hello_world_proto = {
-        .func = bpf_hello_world,
-        .gpl_only = false,
-        .ret_type = RET_INTEGER,
-        .arg1_type = ARG_PTR_TO_CONST_STR,
-};
